@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+popcorntime()
+{
+	USER_UID=$(id -u)
+	USER_GID=$(id -g)
+	xhost +local:docker
+
+	docker run --rm \
+        --net host \
+        --memory 512m \
+        --cpuset-cpus 0 \
+        -e USER_UID=$USER_UID \
+        -e USER_GID=$USER_GID \
+        -e DISPLAY=$DISPLAY \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v /run/user/$USER_UID/pulse:/run/pulse \
+        -v /var/run/dbus:/var/run/dbus \
+        --name popcorntime \
+        jmardz/popcorntime
+}
